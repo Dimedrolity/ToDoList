@@ -140,9 +140,9 @@ namespace ToDoList
 
             _list.MarkDone(42, 10, 102);
                         
-            _list.AddEntry(42, 10, "Create project - 103", 103);
+            _list.AddEntry(42, 10, "new Name", 103);
 
-            AssertEntries(Entry.Done(42, "Create project - 103"));
+            AssertEntries(Entry.Done(42, "new Name"));
         }
 
         [Test]
@@ -167,52 +167,28 @@ namespace ToDoList
 
             AssertEntries(Entry.Undone(42, "Create project"));
         }
-
-
+        
         [Test]
-        public void AddAndRemove_DontAffectOnState()
+        public void Add_And_Remove_DontAffectOnState()
         {
+            _list.MarkDone(42, UserB, int.MinValue);
             _list.AddEntry(42, UserA, "OldName", 100);
             _list.RemoveEntry(42, UserA, 105);
-            _list.MarkDone(42, UserB, 5); //любой timestamp
             _list.AddEntry(42, UserA, "NewName", 110);
 
             AssertEntries(Entry.Done(42, "NewName"));
         }
-
-
+        
         [Test]
-        public void DismissUserAndGetEmptyList_FromChat()
-        {
-            _list.AddEntry(42, UserA, "Introduce autotests", 100);
-            _list.MarkDone(42, UserB, 105);
-
-            _list.DismissUser(UserA); // вот  тут ты убираешь все то, что прислал userA
-
-            AssertListEmpty();
-        }
-
-        [Test]
-        public void DismissUserAndAddEntryFromAnotherUser_FromChat()
-        {
-            _list.AddEntry(10, UserA, "abc", 100);
-            _list.MarkDone(10, UserB, 105);
-            _list.DismissUser(UserA);
-            _list.AddEntry(10, UserC, "cba", 110);
-
-            AssertEntries(Entry.Done(10, "cba"));
-        }
-
-        [Test]
-        public void Not_Mark_Undone_When_Timestamp_Less_Than_Done_Mark_Timestamp2()
+        public void Not_Mark_Undone_When_Timestamp_Less_Than_Done_Mark_Timestamp()
         {
             _list.AddEntry(42, UserA, "Create project", 100);
+            
             _list.MarkDone(42, UserB, 105);
 
-            _list.MarkUndone(42, UserC, 107);
             _list.MarkUndone(42, UserC, 99);
 
-            AssertEntries(Entry.Undone(42, "Create project"));
+            AssertEntries(Entry.Done(42, "Create project"));
         }
 
         [Test]
@@ -269,6 +245,17 @@ namespace ToDoList
             _list.DismissUser(UserB);
 
             AssertEntries(Entry.Done(42, "Introduce autotests"));
+        }
+
+        [Test]
+        public void Dismiss_User_And_Add_Entry_From_Another_User()
+        {
+            _list.AddEntry(10, UserA, "abc", 100);
+            _list.MarkDone(10, UserB, 105);
+            _list.DismissUser(UserA);
+            _list.AddEntry(10, UserC, "cba", 110);
+
+            AssertEntries(Entry.Done(10, "cba"));
         }
 
         [Test]

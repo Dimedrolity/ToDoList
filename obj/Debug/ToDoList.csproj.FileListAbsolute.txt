@@ -1,0 +1,12 @@
+D:\Учёба\Тестовые на стажировку C# Контур\TODO лист\ToDoList\bin\Debug\ToDoList.exe
+D:\Учёба\Тестовые на стажировку C# Контур\TODO лист\ToDoList\bin\Debug\ToDoList.pdb
+D:\Учёба\Тестовые на стажировку C# Контур\TODO лист\ToDoList\bin\Debug\FluentAssertions.dll
+D:\Учёба\Тестовые на стажировку C# Контур\TODO лист\ToDoList\bin\Debug\nunit.framework.dll
+D:\Учёба\Тестовые на стажировку C# Контур\TODO лист\ToDoList\bin\Debug\FluentAssertions.pdb
+D:\Учёба\Тестовые на стажировку C# Контур\TODO лист\ToDoList\bin\Debug\FluentAssertions.xml
+D:\Учёба\Тестовые на стажировку C# Контур\TODO лист\ToDoList\bin\Debug\nunit.framework.xml
+D:\Учёба\Тестовые на стажировку C# Контур\TODO лист\ToDoList\obj\Debug\ToDoList.csprojAssemblyReference.cache
+D:\Учёба\Тестовые на стажировку C# Контур\TODO лист\ToDoList\obj\Debug\ToDoList.csproj.CoreCompileInputs.cache
+D:\Учёба\Тестовые на стажировку C# Контур\TODO лист\ToDoList\obj\Debug\ToDoList.csproj.CopyComplete
+D:\Учёба\Тестовые на стажировку C# Контур\TODO лист\ToDoList\obj\Debug\ToDoList.exe
+D:\Учёба\Тестовые на стажировку C# Контур\TODO лист\ToDoList\obj\Debug\ToDoList.pdb
