@@ -1,4 +1,5 @@
-﻿﻿using System.Linq;
+﻿﻿using System;
+ using System.Linq;
 using FluentAssertions;
 using NUnit.Framework;
 
@@ -95,7 +96,7 @@ namespace ToDoList
         }
 
         [Test]
-        public void AddEntry_Remove_Add()
+        public void Add_Entry_Remove_Add()
         {
             _list.AddEntry(42, UserA, "Create audio subsystem", 100);
             _list.RemoveEntry(42, UserA, 101);
@@ -103,6 +104,16 @@ namespace ToDoList
 
 
             AssertEntries(Entry.Undone(42, "Create audio subsystem"));
+        }
+        
+        [Test]
+        public void Remove_Entry_Add_Remove()
+        {
+            _list.RemoveEntry(42, UserA, 100);
+            _list.AddEntry(42, UserA, "Create audio subsystem", 101);
+            _list.RemoveEntry(42, UserA, 102);
+            
+           AssertListEmpty();
         }
 
         [Test]
@@ -115,6 +126,16 @@ namespace ToDoList
             _list.MarkDone(42, markingUserId, markTimestamp);
 
             AssertEntries(Entry.Done(42, "Create project"));
+        }
+        
+        [Test]
+        public void Mark_Entry_Undone()
+        {
+            _list.AddEntry(42, UserA, "Create project", 100);
+            
+            _list.MarkUndone(42, UserC, 99);
+
+            AssertEntries(Entry.Undone(42, "Create project"));
         }
 
         [Test]
@@ -167,7 +188,7 @@ namespace ToDoList
 
             AssertEntries(Entry.Undone(42, "Create project"));
         }
-        
+
         [Test]
         public void Add_And_Remove_DontAffectOnState()
         {
@@ -189,6 +210,50 @@ namespace ToDoList
             _list.MarkUndone(42, UserC, 99);
 
             AssertEntries(Entry.Done(42, "Create project"));
+        }
+        
+        [Test]
+        public void Mark_Undone_When_Two_Actions_With_Same_Timestamp()
+        {
+            _list.AddEntry(42, UserA, "Create project", 100);
+            
+            _list.MarkUndone(42, UserC, 99);
+            _list.MarkUndone(42, UserB, 99);
+
+            AssertEntries(Entry.Undone(42, "Create project"));
+        }
+        
+        [Test]
+        public void Mark_Done_When_Two_Actions_With_Same_Timestamp()
+        {
+            _list.AddEntry(42, UserA, "Create project", 100);
+            
+            _list.MarkDone(42, UserC, 99);
+            _list.MarkDone(42, UserB, 99);
+
+            AssertEntries(Entry.Done(42, "Create project"));
+        }
+        
+        [Test]
+        public void Mark_Undone_When_Undone_And_Done_With_Same_Timestamp()
+        {
+            _list.AddEntry(42, UserA, "Create project", 100);
+            
+            _list.MarkUndone(42, UserC, 99);
+            _list.MarkDone(42, UserB, 99);
+
+            AssertEntries(Entry.Undone(42, "Create project"));
+        }
+        
+        [Test]
+        public void Mark_Undone_When_Done_And_Undone_With_Same_Timestamp()
+        {
+            _list.AddEntry(42, UserA, "Create project", 100);
+            
+            _list.MarkDone(42, UserB, 99);
+            _list.MarkUndone(42, UserC, 99);
+
+            AssertEntries(Entry.Undone(42, "Create project"));
         }
 
         [Test]
