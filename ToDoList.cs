@@ -77,27 +77,15 @@ namespace ToDoList
 
             return consistentEntries;
 
-
+            
             Dictionary<int, HashSet<TAction>> GetAllowedUsersActionsFrom<TAction>(
                 Dictionary<int, HashSet<TAction>> entryIdToActions) where TAction : UserAction
             {
-                var entryIdToActionsFromAllowedUsers = new Dictionary<int, HashSet<TAction>>();
-
-                foreach (var (entryId, actions) in entryIdToActions)
-                {
-                    foreach (var action in actions)
-                    {
-                        if (_dismissedUsersIds.Contains(action.UserId))
-                            continue;
-
-                        if (!entryIdToActionsFromAllowedUsers.ContainsKey(entryId))
-                            entryIdToActionsFromAllowedUsers[entryId] = new HashSet<TAction>();
-
-                        entryIdToActionsFromAllowedUsers[entryId].Add(action);
-                    }
-                }
-
-                return entryIdToActionsFromAllowedUsers;
+                bool IsActionFromAllowedUser(TAction action) => !_dismissedUsersIds.Contains(action.UserId);
+                
+                return entryIdToActions
+                    .Where(pair => pair.Value.Any(IsActionFromAllowedUser))
+                    .ToDictionary(pair => pair.Key, pair => pair.Value.Where(IsActionFromAllowedUser).ToHashSet());
             }
         }
     }
