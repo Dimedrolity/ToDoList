@@ -81,11 +81,11 @@ namespace ToDoList
             Dictionary<int, HashSet<TAction>> GetAllowedUsersActionsFrom<TAction>(
                 Dictionary<int, HashSet<TAction>> entryIdToActions) where TAction : UserAction
             {
-                bool IsActionFromAllowedUser(TAction action) => !_dismissedUsersIds.Contains(action.UserId);
+                bool IsActionDoneFromAllowedUser(TAction action) => !_dismissedUsersIds.Contains(action.UserId);
                 
                 return entryIdToActions
-                    .Where(pair => pair.Value.Any(IsActionFromAllowedUser))
-                    .ToDictionary(pair => pair.Key, pair => pair.Value.Where(IsActionFromAllowedUser).ToHashSet());
+                    .Where(pair => pair.Value.Any(IsActionDoneFromAllowedUser))
+                    .ToDictionary(pair => pair.Key, pair => pair.Value.Where(IsActionDoneFromAllowedUser).ToHashSet());
             }
         }
     }
