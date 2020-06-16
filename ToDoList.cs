@@ -1,4 +1,4 @@
-﻿﻿﻿using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,34 +20,24 @@ namespace ToDoList
 
         public void AddEntry(int entryId, int userId, string name, long timestamp)
         {
-            if (!_entryIdToAddActions.ContainsKey(entryId))
-                _entryIdToAddActions[entryId] = new HashSet<AddAction>();
-
-            _entryIdToAddActions[entryId].Add(new AddAction(timestamp, userId, name));
+            _entryIdToAddActions.AddValueToCollectionWithContainsCheck(entryId, new AddAction(timestamp, userId, name));
         }
 
         public void RemoveEntry(int entryId, int userId, long timestamp)
         {
-            if (!_entryIdToRemoveActions.ContainsKey(entryId))
-                _entryIdToRemoveActions[entryId] = new HashSet<RemoveAction>();
-
-            _entryIdToRemoveActions[entryId].Add(new RemoveAction(timestamp, userId));
+            _entryIdToRemoveActions.AddValueToCollectionWithContainsCheck(entryId, new RemoveAction(timestamp, userId));
         }
 
         public void MarkDone(int entryId, int userId, long timestamp)
         {
-            if (!_entryIdToStateChangeActions.ContainsKey(entryId))
-                _entryIdToStateChangeActions[entryId] = new HashSet<StateChangeAction>();
-
-            _entryIdToStateChangeActions[entryId].Add(new StateChangeAction(timestamp, userId, EntryState.Done));
+            _entryIdToStateChangeActions.AddValueToCollectionWithContainsCheck(entryId,
+                new StateChangeAction(timestamp, userId, EntryState.Done));
         }
 
         public void MarkUndone(int entryId, int userId, long timestamp)
         {
-            if (!_entryIdToStateChangeActions.ContainsKey(entryId))
-                _entryIdToStateChangeActions[entryId] = new HashSet<StateChangeAction>();
-
-            _entryIdToStateChangeActions[entryId].Add(new StateChangeAction(timestamp, userId, EntryState.Undone));
+            _entryIdToStateChangeActions.AddValueToCollectionWithContainsCheck(entryId,
+                new StateChangeAction(timestamp, userId, EntryState.Undone));
         }
 
         public void DismissUser(int userId) => _dismissedUsersIds.Add(userId);
@@ -77,12 +67,12 @@ namespace ToDoList
 
             return consistentEntries;
 
-            
+
             Dictionary<int, HashSet<TAction>> GetAllowedUsersActionsFrom<TAction>(
                 Dictionary<int, HashSet<TAction>> entryIdToActions) where TAction : UserAction
             {
                 bool IsActionDoneFromAllowedUser(TAction action) => !_dismissedUsersIds.Contains(action.UserId);
-                
+
                 return entryIdToActions
                     .Where(pair => pair.Value.Any(IsActionDoneFromAllowedUser))
                     .ToDictionary(pair => pair.Key, pair => pair.Value.Where(IsActionDoneFromAllowedUser).ToHashSet());
@@ -201,7 +191,7 @@ namespace ToDoList
 
             return filteredEntryIdToAddActions;
         }
-        
+
         private IEnumerable<Entry> CreateOneEntryWithActualNameForEachEntryIdFrom(
             Dictionary<int, HashSet<AddAction>> entryIdToAddActions)
         {
@@ -251,6 +241,16 @@ namespace ToDoList
         {
             key = keyValuePair.Key;
             value = keyValuePair.Value;
+        }
+
+        public static void AddValueToCollectionWithContainsCheck<TCollection, TValue>(
+            this Dictionary<int, TCollection> @this, int key, TValue value)
+            where TCollection : ICollection<TValue>, new()
+        {
+            if (!@this.ContainsKey(key))
+                @this[key] = new TCollection();
+
+            @this[key].Add(value);
         }
     }
 }
